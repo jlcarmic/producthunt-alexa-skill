@@ -1,0 +1,29 @@
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Images
+images
+
+# Speech Assets
+speechAssets
+
+# The Lambda Zip
+*.zip
+
+# Users Environment Variables
+.lock-wscript
+
+# The secrets file containing the PH API Keys
+secrets.txt
+
+# Node Modules Folder
+node_modules
+
+# The test file I use for testing API calls
+test.js
