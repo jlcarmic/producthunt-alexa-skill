@@ -1,10 +1,13 @@
 // Set App ID
-var APP_ID = undefined;
+var APP_ID = 'amzn1.echo-sdk-ams.app.a5c00e5b-91c4-4b8d-a720-79e1cce84b53';
 
 // Require Needed Modules
 var fs = require('fs');
 var Client = require('node-rest-client').Client;
 var AlexaSkill = require('./AlexaSkill');
+var emojiStrip = require('emoji-strip');
+var asciify = require('asciify-string');
+var xmlescape = require('xml-escape');
 
 // Create a REST client for calling ProductHunt API
 var client = new Client();
@@ -25,12 +28,11 @@ ProductHuntSkill.prototype.eventHandlers.onSessionStarted = function (sessionSta
 // Handle Skill Launch
 ProductHuntSkill.prototype.eventHandlers.onLaunch = function (launchRequest, session, response) {
     console.log("ProductHuntSkill onLaunch requestId: " + launchRequest.requestId + ", sessionId: " + session.sessionId);
-    getWelcomeResponse(response);
 
     var cardTitle = "Product Hunt";
     var repromptText = "With Product, you can get today's hunts for a given category.  For example, you could say today, or for technology. Meow, which category do you want?";
-    var speechText = "<p>Product Hunter.</p> <p>Which category do you want hunts for?</p>";
-    var cardOutput = "Product Hunter. Which category do you want hunts for?";
+    var speechText = "<p>Product Hunt.</p> <p>Which category do you want hunts for?</p>";
+    var cardOutput = "Product Hunt. Which category do you want hunts for?";
 
     var speechOutput = {
         speech: "<speak>" + speechText + "</speak>",
@@ -73,7 +75,7 @@ ProductHuntSkill.prototype.intentHandlers = {
 
     "AMAZON.StopIntent": function (intent, session, response) {
         var speechOutput = {
-                speech: "Goodbye",
+                speech: "Goodbye for meow.",
                 type: AlexaSkill.speechOutputType.PLAIN_TEXT
         };
         response.tell(speechOutput);
@@ -81,7 +83,7 @@ ProductHuntSkill.prototype.intentHandlers = {
 
     "AMAZON.CancelIntent": function (intent, session, response) {
         var speechOutput = {
-                speech: "Goodbye",
+                speech: "Goodbye for meow.",
                 type: AlexaSkill.speechOutputType.PLAIN_TEXT
         };
         response.tell(speechOutput);
@@ -119,14 +121,14 @@ function handleCategoryRequest(intent, session, response) {
 
 						if (posts.length > 0) {
 							var date = new Date();
-							var prefix = "Hunts for " + cat + " on " + date.toDateString();
+							var prefix = "Today's Hunts for " + cat;
 							var cardTitle = prefix;
 							var cardContent = prefix;
 							var speechText = "<p>" + prefix + "</p> ";
 							var repromptText = "With Product Hunt, you can get hunts for any category.  For example, you could say technology or books, or you can say exit. Meow, which category do you want?";
 
 							for (var i = 0; i < posts.length; i++) {
-								var entry = posts[i]['name'] + ", " + posts[i]['tagline'] + " was posted by " + posts[i]['user']['name'] + ".  ";
+								var entry = fixFormat(posts[i]['user']['name'] + " posted " + posts[i]['name'] + ", " + posts[i]['tagline'] + ".  ");
 
 								cardContent = cardContent + entry + " ";
 								speechText = speechText + "<p>" + entry + "</p> ";
@@ -167,6 +169,11 @@ function handleCategoryRequest(intent, session, response) {
 			response.tell(speechText);
 		}
 	});
+}
+
+function fixFormat(inp) {
+	var re = new RegExp(" ❄︎", 'g');
+	return xmlescape(asciify(emojiStrip(inp))).replace(re, "");
 }
 
 function category_disambiguate(cat) {

@@ -18,6 +18,9 @@
   },
   "homepage": "http://johncarmichael.me",
   "dependencies": {
-    "node-rest-client": "^1.5.1"
+    "asciify-string": "^0.1.1",
+    "emoji-strip": "0.0.3",
+    "node-rest-client": "^1.5.1",
+    "xml-escape": "^1.0.0"
   }
 }
