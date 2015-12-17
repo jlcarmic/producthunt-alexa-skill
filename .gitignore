@@ -10,9 +10,6 @@ pids
 # Images
 images
 
-# Speech Assets
-speechAssets
-
 # The Lambda Zip
 *.zip
 
