@@ -30,7 +30,7 @@ ProductHuntSkill.prototype.eventHandlers.onLaunch = function (launchRequest, ses
     console.log("ProductHuntSkill onLaunch requestId: " + launchRequest.requestId + ", sessionId: " + session.sessionId);
 
     var cardTitle = "Product Hunt";
-    var repromptText = "With Product, you can get today's hunts for a given category.  For example, you could say today, or for technology. Meow, which category do you want?";
+    var repromptText = "With Product, you can get today's hunts for a given category.  For example, you could say today, or for technology. Now, which category do you want?";
     var speechText = "<p>Product Hunt.</p> <p>Which category do you want hunts for?</p>";
     var cardOutput = "Product Hunt. Which category do you want hunts for?";
 
@@ -60,7 +60,7 @@ ProductHuntSkill.prototype.intentHandlers = {
     },
 
     "AMAZON.HelpIntent": function (intent, session, response) {
-        var speechText = "With Product Hunt, you can get hunts for any category.  For example, you could say technology or books, or you can say exit. Meow, which category do you want?";
+        var speechText = "With Product Hunt, you can get hunts for any category.  For example, you could say technology or books, or you can say never mind. Now, which category do you want?";
         var repromptText = "Which category do you want?";
         var speechOutput = {
             speech: speechText,
@@ -73,9 +73,17 @@ ProductHuntSkill.prototype.intentHandlers = {
         response.ask(speechOutput, repromptOutput);
     },
 
+    "AMAZON.NoIntent": function (intent, session, response) {
+        var speechOutput = {
+                speech: "Goodbye.",
+                type: AlexaSkill.speechOutputType.PLAIN_TEXT
+        };
+        response.tell(speechOutput);
+    },
+
     "AMAZON.StopIntent": function (intent, session, response) {
         var speechOutput = {
-                speech: "Goodbye for meow.",
+                speech: "Goodbye.",
                 type: AlexaSkill.speechOutputType.PLAIN_TEXT
         };
         response.tell(speechOutput);
@@ -83,7 +91,7 @@ ProductHuntSkill.prototype.intentHandlers = {
 
     "AMAZON.CancelIntent": function (intent, session, response) {
         var speechOutput = {
-                speech: "Goodbye for meow.",
+                speech: "Goodbye.",
                 type: AlexaSkill.speechOutputType.PLAIN_TEXT
         };
         response.tell(speechOutput);
@@ -94,81 +102,88 @@ function handleCategoryRequest(intent, session, response) {
 	var catSlot = intent.slots.category;
 	var cat = category_disambiguate(catSlot.value);
 
-	// Decrypt PH API Secret
-	var secrets = fs.readFileSync('./secrets.txt');
-	var ph_keys = JSON.parse(secrets);
+	// If bad category error nicely, else call API
+	if(cat == "") {
+		speechText = "I'm sorry, that is an invalid category. For example you can ask for hunts in books, technology, games or podcasts. Please try again.";
+		cardContent = speechText;
+		response.tell(speechText);
+	} else {
+		// Decrypt PH API Secret
+		var secrets = fs.readFileSync('./secrets.txt');
+		var ph_keys = JSON.parse(secrets);
 
-	// First get oauth client key
-	var args = {
-		headers: { "Content-Type": "application/json" },
-		data: { "client_id": ph_keys['API_KEY'], "client_secret": ph_keys['API_SECRET'], "grant_type": "client_credentials" }
-	};
+		// First get oauth client key
+		var args = {
+			headers: { "Content-Type": "application/json" },
+			data: { "client_id": ph_keys['API_KEY'], "client_secret": ph_keys['API_SECRET'], "grant_type": "client_credentials" }
+		};
 
-	client.post("https://api.producthunt.com/v1/oauth/token", args, function(data, resp) {
-		if(resp.statusCode == 200) {
-			var body = JSON.parse(data);
-			var token = body['access_token']
+		client.post("https://api.producthunt.com/v1/oauth/token", args, function(data, resp) {
+			if(resp.statusCode == 200) {
+				var body = JSON.parse(data);
+				var token = body['access_token']
 
-			if(token != '') {
-				args = {
-					headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
-				};
+				if(token != '') {
+					args = {
+						headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+					};
 
-				var cat_url = "https://api.producthunt.com/v1/categories/" + cat + "/posts";
-				client.get(cat_url, args, function(data, resp) {
-					if(resp.statusCode == 200) {
-						posts = JSON.parse(data)['posts'];
+					var cat_url = "https://api.producthunt.com/v1/categories/" + cat + "/posts";
+					client.get(cat_url, args, function(data, resp) {
+						if(resp.statusCode == 200) {
+							posts = JSON.parse(data)['posts'];
 
-						if (posts.length > 0) {
-							var date = new Date();
-							var prefix = "Today's Hunts for " + cat;
-							var cardTitle = prefix;
-							var cardContent = prefix;
-							var speechText = "<p>" + prefix + "</p> ";
-							var repromptText = "With Product Hunt, you can get hunts for any category.  For example, you could say technology or books, or you can say exit. Meow, which category do you want?";
+							if (posts.length > 0) {
+								var date = new Date();
+								var prefix = "Today's Hunts for " + cat;
+								var cardTitle = prefix;
+								var cardContent = prefix;
+								var speechText = "<p>" + prefix + "</p> ";
+								var repromptText = "With Product Hunt, you can get hunts for any category.  For example, you could say technology or books, or you can say exit. Now, which category do you want?";
 
-							for (var i = 0; i < posts.length; i++) {
-								var entry = fixFormat(posts[i]['user']['name'] + " posted " + posts[i]['name'] + ", " + posts[i]['tagline'] + ".  ");
+								for (var i = 0; i < posts.length; i++) {
+									var entry = fixFormat(posts[i]['user']['name'] + " posted " + posts[i]['name'] + ", " + posts[i]['tagline'] + ".  ");
 
-								cardContent = cardContent + entry + " ";
-								speechText = speechText + "<p>" + entry + "</p> ";
+									cardContent = cardContent + entry + " ";
+									speechText = speechText + "<p>" + entry + "</p> ";
+								}
+
+								speechText = speechText + " <p>Would you like another category now?</p>";
+
+								var speechOutput = {
+									speech: "<speak>" + speechText + "</speak>",
+									type: AlexaSkill.speechOutputType.SSML
+								};
+
+								var repromptOutput = {
+									speech: repromptText,
+									type: AlexaSkill.speechOutputType.PLAIN_TEXT
+								};
+
+								response.askWithCard(speechOutput, repromptOutput, cardTitle, cardContent);
+							} else {
+								speechText = "There is a problem connecting to Product Hunt at this time. Please try again later.";
+								cardContent = speechText;
+								response.tell(speechText);
 							}
-
-							speechText = speechText + " <p>Would you like another category meow?</p>";
-
-							var speechOutput = {
-								speech: "<speak>" + speechText + "</speak>",
-								type: AlexaSkill.speechOutputType.SSML
-							};
-
-							var repromptOutput = {
-								speech: repromptText,
-								type: AlexaSkill.speechOutputType.PLAIN_TEXT
-							};
-
-							response.askWithCard(speechOutput, repromptOutput, cardTitle, cardContent);
 						} else {
 							speechText = "There is a problem connecting to Product Hunt at this time. Please try again later.";
 							cardContent = speechText;
-							response.tell(speechText);
+							response.tell(speechText);		
 						}
-					} else {
-						speechText = "There is a problem connecting to Product Hunt at this time. Please try again later.";
-						cardContent = speechText;
-						response.tell(speechText);		
-					}
-				});
+					});
+				} else {
+					speechText = "There is a problem connecting to Product Hunt at this time. Please try again later.";
+					cardContent = speechText;
+					response.tell(speechText);
+				}
 			} else {
 				speechText = "There is a problem connecting to Product Hunt at this time. Please try again later.";
 				cardContent = speechText;
 				response.tell(speechText);
 			}
-		} else {
-			speechText = "There is a problem connecting to Product Hunt at this time. Please try again later.";
-			cardContent = speechText;
-			response.tell(speechText);
-		}
-	});
+		});
+	}
 }
 
 function fixFormat(inp) {
@@ -190,7 +205,11 @@ function category_disambiguate(cat) {
 		"book": "books"
 	};
 
-	return cat_mappings[cat];
+	if(cat_mappings.hasOwnProperty(cat)) {
+		return cat_mappings[cat];
+	} else {
+		return "";
+	}
 }
 
 // Create the handler that responds to the Alexa Request.
