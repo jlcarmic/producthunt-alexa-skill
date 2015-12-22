@@ -101,12 +101,27 @@ ProductHuntSkill.prototype.intentHandlers = {
 function handleCategoryRequest(intent, session, response) {
 	var catSlot = intent.slots.category;
 	var cat = category_disambiguate(catSlot.value);
+	var speechText = "";
+	var repromptText = "";
+	var speechOutput = {};
+	var repromptOutput = {};
 
 	// If bad category error nicely, else call API
 	if(cat == "") {
-		speechText = "I'm sorry, that is an invalid category. For example you can ask for hunts in books, technology, games or podcasts. Please try again.";
-		cardContent = speechText;
-		response.tell(speechText);
+		speechText = "I'm sorry, that is an invalid category. For example you can ask for hunts in books, technology, games or podcasts. Which category do you want?";
+		repromptText = "Which category do you want?";
+        
+        speechOutput = {
+            speech: speechText,
+            type: AlexaSkill.speechOutputType.PLAIN_TEXT
+        };
+        
+        repromptOutput = {
+            speech: repromptText,
+            type: AlexaSkill.speechOutputType.PLAIN_TEXT
+        };
+
+        response.ask(speechOutput, repromptOutput);
 	} else {
 		// Decrypt PH API Secret
 		var secrets = fs.readFileSync('./secrets.txt');
@@ -138,8 +153,8 @@ function handleCategoryRequest(intent, session, response) {
 								var prefix = "Today's Hunts for " + cat;
 								var cardTitle = prefix;
 								var cardContent = prefix;
-								var speechText = "<p>" + prefix + "</p> ";
-								var repromptText = "With Product Hunt, you can get hunts for any category.  For example, you could say technology or books, or you can say exit. Now, which category do you want?";
+								speechText = "<p>" + prefix + "</p> ";
+								repromptText = "With Product Hunt, you can get hunts for any category.  For example, you could say technology or books, or you can say exit. Now, which category do you want?";
 
 								for (var i = 0; i < posts.length; i++) {
 									var entry = fixFormat(posts[i]['user']['name'] + " posted " + posts[i]['name'] + ", " + posts[i]['tagline'] + ".  ");
@@ -150,12 +165,12 @@ function handleCategoryRequest(intent, session, response) {
 
 								speechText = speechText + " <p>Would you like another category now?</p>";
 
-								var speechOutput = {
+								speechOutput = {
 									speech: "<speak>" + speechText + "</speak>",
 									type: AlexaSkill.speechOutputType.SSML
 								};
 
-								var repromptOutput = {
+								repromptOutput = {
 									speech: repromptText,
 									type: AlexaSkill.speechOutputType.PLAIN_TEXT
 								};
