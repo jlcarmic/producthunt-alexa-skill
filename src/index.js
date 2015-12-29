@@ -73,6 +73,20 @@ ProductHuntSkill.prototype.intentHandlers = {
         response.ask(speechOutput, repromptOutput);
     },
 
+    "AMAZON.YesIntent": function (intent, session, response) {
+    	var speechText = "Ok, which category would you like hunts for. For example, you could say technology or books, or you can say never mind.";
+        var repromptText = "Which category do you want?";
+        var speechOutput = {
+            speech: speechText,
+            type: AlexaSkill.speechOutputType.PLAIN_TEXT
+        };
+        var repromptOutput = {
+            speech: repromptText,
+            type: AlexaSkill.speechOutputType.PLAIN_TEXT
+        };
+        response.ask(speechOutput, repromptOutput);
+    },
+
     "AMAZON.NoIntent": function (intent, session, response) {
         var speechOutput = {
                 speech: "Goodbye.",
@@ -146,7 +160,8 @@ function handleCategoryRequest(intent, session, response) {
 					var cat_url = "https://api.producthunt.com/v1/categories/" + cat + "/posts";
 					client.get(cat_url, args, function(data, resp) {
 						if(resp.statusCode == 200) {
-							posts = JSON.parse(data)['posts'];
+							// Slice the top 5 hunts so we don't overwhelm the user
+							posts = JSON.parse(data)['posts'].slice(0,5);
 
 							if (posts.length > 0) {
 								var date = new Date();

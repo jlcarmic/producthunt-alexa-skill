@@ -1,4 +1,5 @@
 CategoryIntent {category}
+CategoryIntent {category} hunts
 CategoryIntent hunts for {category}
 CategoryIntent the hunts for {category}
 CategoryIntent what are hunts for {category}
@@ -7,6 +8,8 @@ CategoryIntent what are the hunts for {category}
 CategoryIntent what're the hunts for {category}
 CategoryIntent top hunts for {category}
 CategoryIntent the top hunts for {category}
+CategoryIntent top {category} hunts
+CategoryIntent the top {category} hunts
 CategoryIntent what are top hunts for {category}
 CategoryIntent what're top hunts for {category}
 CategoryIntent what are the top hunts for {category}
@@ -48,8 +51,29 @@ CategoryIntent what're the {category} hunts
 CategoryIntent what the top {category} hunts are
 CategoryIntent what are the top {category} hunts
 CategoryIntent what're the top {category} hunts
+CategoryIntent give me {category} hunts
+CategoryIntent give me {category} top hunts
 CategoryIntent give me the {category} hunts
 CategoryIntent give me the top {category} hunts
 CategoryIntent give me today's {category} hunts
 CategoryIntent give me today's top {category} hunts
+CategoryIntent tell me the {category} hunts
+CategoryIntent tell me the top {category} hunts
+CategoryIntent tell me the hunts for {category}
+CategoryIntent tell me the top hunts for {category}
+CategoryIntent tell me about {category} hunts
+CategoryIntent tell me about the hunts for {category}
+CategoryIntent tell me about the top hunts for {category}
+CategoryIntent i want hunts for {category}
+CategoryIntent i want the hunts for {category}
+CategoryIntent i want the top hunts for {category}
+CategoryIntent i want {category} hunts
+CategoryIntent i want the {category} hunts
+CategoryIntent i want the top {category} hunts
+CategoryIntent i'd like {category} hunts
+CategoryIntent i'd like the {category} hunts
+CategoryIntent i'd like the top {category} hunts
+CategoryIntent i'd like hunts for {category}
+CategoryIntent i'd like the hunts for {category}
+CategoryIntent i'd like the top hunts for {category}
 
