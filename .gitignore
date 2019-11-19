@@ -7,20 +7,14 @@ pids
 *.pid
 *.seed
 
-# Images
-images
-
 # The Lambda Zip
 *.zip
 
 # Users Environment Variables
 .lock-wscript
 
-# The secrets file containing the PH API Keys
-secrets.txt
-
 # Node Modules Folder
 node_modules
 
-# The test file I use for testing API calls
-test.js
+# Environment Variables
+.env
