@@ -1,0 +1,179 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "product hunt",
+      "intents": [
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "CategoryIntent",
+          "slots": [
+            {
+              "name": "category",
+              "type": "LIST_OF_CATS"
+            }
+          ],
+          "samples": [
+            "{category}",
+            "{category} hunts",
+            "hunts for {category}",
+            "the hunts for {category}",
+            "what are hunts for {category}",
+            "what're hunts for {category}",
+            "what are the hunts for {category}",
+            "what're the hunts for {category}",
+            "top hunts for {category}",
+            "the top hunts for {category}",
+            "top {category} hunts",
+            "the top {category} hunts",
+            "what are top hunts for {category}",
+            "what're top hunts for {category}",
+            "what are the top hunts for {category}",
+            "what're the top hunts for {category}",
+            "in {category}",
+            "hunts in {category}",
+            "the hunts in {category}",
+            "what are hunts in {category}",
+            "what're hunts in {category}",
+            "what are the hunts in {category}",
+            "what're the hunts in {category}",
+            "top hunts in {category}",
+            "the top hunts in {category}",
+            "what are top hunts in {category}",
+            "what're top hunts in {category}",
+            "what are the top hunts in {category}",
+            "what're the top hunts in {category}",
+            "today's hunts for {category}",
+            "today's hunts in {category}",
+            "what are today's hunts for {category}",
+            "what're today's hunts for {category}",
+            "what are today's hunts in {category}",
+            "what're today's hunts in {category}",
+            "today's top hunts for {category}",
+            "today's top hunts in {category}",
+            "what are today's top hunts for {category}",
+            "what're today's top hunts for {category}",
+            "what are today's top hunts in {category}",
+            "what're today's top hunts in {category}",
+            "what today's {category} hunts are",
+            "what are today's {category} hunts",
+            "what're today's {category} hunts",
+            "what today's top {category} hunts are",
+            "what are today's top {category} hunts",
+            "what're today's top {category} hunts",
+            "what the {category} hunts are",
+            "what are the {category} hunts",
+            "what're the {category} hunts",
+            "what the top {category} hunts are",
+            "what are the top {category} hunts",
+            "what're the top {category} hunts",
+            "give me {category} hunts",
+            "give me {category} top hunts",
+            "give me the {category} hunts",
+            "give me the top {category} hunts",
+            "give me today's {category} hunts",
+            "give me today's top {category} hunts",
+            "tell me the {category} hunts",
+            "tell me the top {category} hunts",
+            "tell me the hunts for {category}",
+            "tell me the top hunts for {category}",
+            "tell me about {category} hunts",
+            "tell me about the hunts for {category}",
+            "tell me about the top hunts for {category}",
+            "i want hunts for {category}",
+            "i want the hunts for {category}",
+            "i want the top hunts for {category}",
+            "i want {category} hunts",
+            "i want the {category} hunts",
+            "i want the top {category} hunts",
+            "i'd like {category} hunts",
+            "i'd like the {category} hunts",
+            "i'd like the top {category} hunts",
+            "i'd like hunts for {category}",
+            "i'd like the hunts for {category}",
+            "i'd like the top hunts for {category}"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "name": "LIST_OF_CATS",
+          "values": [
+            {
+              "name": {
+                "value": "tech"
+              }
+            },
+            {
+              "name": {
+                "value": "technology"
+              }
+            },
+            {
+              "name": {
+                "value": "games"
+              }
+            },
+            {
+              "name": {
+                "value": "game"
+              }
+            },
+            {
+              "name": {
+                "value": "gaming"
+              }
+            },
+            {
+              "name": {
+                "value": "podcasts"
+              }
+            },
+            {
+              "name": {
+                "value": "podcast"
+              }
+            },
+            {
+              "name": {
+                "value": "podcasting"
+              }
+            },
+            {
+              "name": {
+                "value": "books"
+              }
+            },
+            {
+              "name": {
+                "value": "book"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
