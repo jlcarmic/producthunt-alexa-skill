@@ -17,7 +17,7 @@
     "type": "git",
     "url": "git+https://github.com/jlcarmic/producthunt_alexa_skill.git"
   },
-  "author": "John Carmichael <jlcarmic@gmail.com>",
+  "author": "John Carmichael (http://johncarmichael.me)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jlcarmic/producthunt_alexa_skill/issues"
